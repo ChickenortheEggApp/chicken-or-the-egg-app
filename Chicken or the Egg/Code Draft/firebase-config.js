@@ -10,14 +10,30 @@ import { getStorage, connectStorageEmulator } from "firebase/storage";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyD8NOwlvZE6_6fAz_isZDAx5yeFqkmt4VQ",
-  authDomain: "chicken-or-the-egg-app.firebaseapp.com",
-  projectId: "chicken-or-the-egg-app",
-  storageBucket: "chicken-or-the-egg-app.firebasestorage.app",
-  messagingSenderId: "89883658019",
-  appId: "1:89883658019:web:bbe65e2e538fdf372d2e96",
-  measurementId: "G-85HH0QFFBE"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
+
+// Validate required environment variables
+const requiredEnvVars = [
+  'REACT_APP_FIREBASE_API_KEY',
+  'REACT_APP_FIREBASE_AUTH_DOMAIN',
+  'REACT_APP_FIREBASE_PROJECT_ID',
+  'REACT_APP_FIREBASE_STORAGE_BUCKET',
+  'REACT_APP_FIREBASE_MESSAGING_SENDER_ID',
+  'REACT_APP_FIREBASE_APP_ID'
+];
+
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    throw new Error(`Missing required environment variable: ${envVar}`);
+  }
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

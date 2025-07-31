@@ -1,0 +1,65 @@
+# Firebase and Google API Security
+.env
+.env.local
+.env.production
+.env.development
+firebase-config.js
+firebase-config.ts
+serviceAccountKey.json
+GoogleService-Info.plist
+google-services.json
+
+# Node modules and build files
+node_modules/
+dist/
+build/
+.next/
+out/
+
+# IDE and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Firebase
+.firebase/
+.firebaserc
+
+# Android
+*.keystore
+*.jks
+local.properties
+
+# iOS
+*.p8
+*.p12
+*.mobileprovision
+DerivedData/
+
+# Flutter/Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+pubspec.lock
+
+# Gradle
+.gradle/
+build/
+gradlew
+gradlew.bat
+
+# Sensitive config files
+config.json
+secrets.json

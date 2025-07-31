@@ -1,15 +1,40 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Allow access to all files for testing
-    // IMPORTANT: Change these rules for production
-    match /{allPaths=**} {
-      allow read, write: if true;
+    // Users can upload and access their own files
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-  }
-}
+    
+    // Coop images - users can access images for their own coops
+    match /coops/{coopId}/{allPaths=**} {
       allow read: if request.auth != null;
-      allow write: if request.auth != null; // Restrict this in production
+      allow write: if request.auth != null && 
+        request.auth.uid == firestore.get(/databases/(default)/documents/coops/$(coopId)).data.ownerId;
+    }
+    
+    // Chicken images - users can access images for chickens in their coops
+    match /chickens/{chickenId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        request.auth.uid == firestore.get(/databases/(default)/documents/chickens/$(chickenId)).data.ownerId;
+    }
+    
+    // Public assets - read-only for authenticated users
+    match /public/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if false; // Only server-side can write public assets
+    }
+    
+    // File size limits and type validation
+    match /{allPaths=**} {
+      allow write: if request.resource.size < 5 * 1024 * 1024 && // 5MB limit
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }

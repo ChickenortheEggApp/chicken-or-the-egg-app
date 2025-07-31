@@ -7,10 +7,16 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build": "firebase deploy",
-    "serve": "firebase serve"
+    "serve": "firebase serve",
+    "setup-env": "cp .env.example .env.local",
+    "validate-env": "node scripts/validate-env.js",
+    "deploy:prod": "npm run validate-env && firebase deploy --only firestore:rules,storage:rules",
+    "secure-check": "node scripts/security-check.js",
+    "github-update": "node scripts/github-update.js"
   },
   "dependencies": {
-    "firebase": "^10.0.0"
+    "firebase": "^10.0.0",
+    "dotenv": "^16.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"

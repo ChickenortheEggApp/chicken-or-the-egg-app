@@ -1,18 +1,45 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write access to all documents for testing
-    // IMPORTANT: Change these rules for production
-    match /{document=**} {
-      allow read, write: if true;
+    // Users can read and write their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
     
-    // More secure rules for production:
-    // match /users/{userId} {
-    //   allow read, write: if request.auth != null && request.auth.uid == userId;
-    // }
-    // match /games/{gameId} {
-    //   allow read, write: if request.auth != null;
-    // }
+    // Chicken coops - users can only access their own coops
+    match /coops/{coopId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.ownerId;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.ownerId;
+    }
+    
+    // Chickens - users can only access chickens in their coops
+    match /chickens/{chickenId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == get(/databases/$(database)/documents/coops/$(resource.data.coopId)).data.ownerId;
+      allow create: if request.auth != null && 
+        request.auth.uid == get(/databases/$(database)/documents/coops/$(request.resource.data.coopId)).data.ownerId;
+    }
+    
+    // Lineage records - read-only for authenticated users, write for owners
+    match /lineage/{lineageId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        request.auth.uid == resource.data.ownerId;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.ownerId;
+    }
+    
+    // Public breed information - read-only for all authenticated users
+    match /breeds/{breedId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Only admins can modify breeds (handle server-side)
+    }
+    
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }

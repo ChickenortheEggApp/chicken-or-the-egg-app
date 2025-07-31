@@ -6,20 +6,24 @@ import { getFirestore } from "firebase/firestore";
 /**
  * Your web app's Firebase configuration.
  * 
- * IMPORTANT: You can find these values in your Firebase project settings.
- * 1. Go to the Firebase console (console.firebase.google.com).
- * 2. Select your project ("chicken-or-the-egg").
- * 3. Go to Project settings (gear icon).
- * 4. In the "Your apps" card, find your web app and the SDK setup and configuration.
+ * IMPORTANT: These values should come from environment variables.
+ * 1. Copy .env.example to .env.local
+ * 2. Fill in your actual Firebase configuration values
+ * 3. Never commit .env.local to version control
  */
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "chicken-or-the-egg", // This is from your .firebaserc
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
+
+// Validate configuration
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  throw new Error('Firebase configuration is incomplete. Please check your environment variables.');
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

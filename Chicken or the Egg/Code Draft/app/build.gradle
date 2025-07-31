@@ -15,17 +15,31 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Build configuration fields for Firebase
+        buildConfigField "String", "FIREBASE_STORAGE_BUCKET", "\"chicken-or-the-egg-app.firebasestorage.app\""
+        buildConfigField "String", "FIREBASE_PROJECT_ID", "\"chicken-or-the-egg-app\""
     }
 
     buildTypes {
+        debug {
+            debuggable true
+            // Debug configuration can use emulator or test Firebase project
+            buildConfigField "String", "FIREBASE_STORAGE_BUCKET", "\"chicken-or-the-egg-app-dev.firebasestorage.app\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Production configuration uses default values from defaultConfig
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    
+    buildFeatures {
+        buildConfig true
     }
 }
 
@@ -45,5 +59,4 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-}
 }

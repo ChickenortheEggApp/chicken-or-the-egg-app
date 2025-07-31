@@ -13,8 +13,12 @@ public class FirebaseManager {
     private FirebaseAuth auth;
     
     private FirebaseManager() {
-        // Initialize Firebase Storage with correct bucket
-        storage = FirebaseStorage.getInstance("gs://chicken-or-the-egg-app.firebasestorage.app");
+        // Initialize Firebase Storage with bucket from configuration
+        String storageBucket = BuildConfig.FIREBASE_STORAGE_BUCKET != null ? 
+            BuildConfig.FIREBASE_STORAGE_BUCKET : 
+            "chicken-or-the-egg-app.firebasestorage.app";
+        
+        storage = FirebaseStorage.getInstance("gs://" + storageBucket);
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
     }

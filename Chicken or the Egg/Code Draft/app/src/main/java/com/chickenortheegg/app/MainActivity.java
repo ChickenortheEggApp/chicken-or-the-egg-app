@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        storage = FirebaseStorage.getInstance("gs://chicken-or-the-egg-app.firebasestorage.app");
+        
+        // Use FirebaseManager for consistent storage configuration
+        FirebaseManager firebaseManager = FirebaseManager.getInstance();
+        storage = firebaseManager.getStorageReference().getStorage();
     }
 }
