@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "chicken-or-the-egg-app-service"
+location: "us-east4"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "chicken-or-the-egg-app-database"
+      cloudSql:
+        instanceId: "chicken-or-the-egg-app-instance"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

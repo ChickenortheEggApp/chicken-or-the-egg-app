@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicken or the Egg - Firebase Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .chicken-form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐔 Chicken or the Egg - Firebase Connection Test</h1>
+        
+        <div id="connectionStatus" class="status info">
+            Testing Firebase connection...
+        </div>
+
+        <div id="authSection">
+            <h2>🔐 Authentication Test</h2>
+            <div id="authStatus"></div>
+            
+            <div id="loginForm">
+                <h3>Sign In / Sign Up</h3>
+                <input type="email" id="email" placeholder="Email" value="test@example.com">
+                <input type="password" id="password" placeholder="Password" value="password123">
+                <br>
+                <button onclick="signUp()">Sign Up</button>
+                <button onclick="signIn()">Sign In</button>
+                <button onclick="signOut()">Sign Out</button>
+            </div>
+        </div>
+
+        <div id="firestoreSection">
+            <h2>🏠 Coop Management Test</h2>
+            <div id="firestoreStatus"></div>
+            
+            <div class="chicken-form">
+                <h3>Create a Coop</h3>
+                <input type="text" id="coopName" placeholder="Coop Name" value="Test Coop">
+                <input type="text" id="coopDescription" placeholder="Description" value="A test coop for chickens">
+                <input type="number" id="coopCapacity" placeholder="Max Capacity" value="10">
+                <button onclick="createCoop()">Create Coop</button>
+            </div>
+
+            <div class="chicken-form">
+                <h3>Add a Chicken</h3>
+                <input type="text" id="chickenName" placeholder="Chicken Name" value="Henrietta">
+                <input type="text" id="chickenBreed" placeholder="Breed" value="Rhode Island Red">
+                <input type="number" id="chickenAge" placeholder="Age (months)" value="6">
+                <button onclick="addChicken()">Add Chicken</button>
+            </div>
+
+            <button onclick="loadData()">Load My Data</button>
+            <div id="dataDisplay"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase configuration with your secure environment variables
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Your Firebase configuration (using your secured values)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJcvFMsB6USCGe6qPe_VGEcrQ9AWuhobw",
+            authDomain: "chicken-or-the-egg-app.firebaseapp.com",
+            projectId: "chicken-or-the-egg-app",
+            storageBucket: "chicken-or-the-egg-app.firebasestorage.app",
+            messagingSenderId: "89883658019",
+            appId: "1:89883658019:web:bbe65e2e538fdf372d2e96",
+            measurementId: "G-85HH0QFFBE"
+        };
+
+        // Initialize Firebase
+        let app, db, auth, currentUser = null;
+        
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            
+            document.getElementById('connectionStatus').innerHTML = '✅ Firebase connected successfully!';
+            document.getElementById('connectionStatus').className = 'status success';
+            
+            // Listen for auth state changes
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user) {
+                    document.getElementById('authStatus').innerHTML = `✅ Signed in as: ${user.email}`;
+                    document.getElementById('authStatus').className = 'status success';
+                } else {
+                    document.getElementById('authStatus').innerHTML = '⚠️ Not signed in';
+                    document.getElementById('authStatus').className = 'status info';
+                }
+            });
+            
+        } catch (error) {
+            document.getElementById('connectionStatus').innerHTML = `❌ Firebase connection failed: ${error.message}`;
+            document.getElementById('connectionStatus').className = 'status error';
+        }
+
+        // Make functions global for button onclick handlers
+        window.signUp = async function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                document.getElementById('authStatus').innerHTML = `✅ Account created for: ${userCredential.user.email}`;
+                document.getElementById('authStatus').className = 'status success';
+            } catch (error) {
+                document.getElementById('authStatus').innerHTML = `❌ Sign up failed: ${error.message}`;
+                document.getElementById('authStatus').className = 'status error';
+            }
+        }
+
+        window.signIn = async function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                document.getElementById('authStatus').innerHTML = `✅ Signed in as: ${userCredential.user.email}`;
+                document.getElementById('authStatus').className = 'status success';
+            } catch (error) {
+                document.getElementById('authStatus').innerHTML = `❌ Sign in failed: ${error.message}`;
+                document.getElementById('authStatus').className = 'status error';
+            }
+        }
+
+        window.signOut = async function() {
+            try {
+                await signOut(auth);
+                document.getElementById('authStatus').innerHTML = '⚠️ Signed out';
+                document.getElementById('authStatus').className = 'status info';
+                document.getElementById('dataDisplay').innerHTML = '';
+            } catch (error) {
+                document.getElementById('authStatus').innerHTML = `❌ Sign out failed: ${error.message}`;
+                document.getElementById('authStatus').className = 'status error';
+            }
+        }
+
+        window.createCoop = async function() {
+            if (!currentUser) {
+                alert('Please sign in first!');
+                return;
+            }
+
+            const name = document.getElementById('coopName').value;
+            const description = document.getElementById('coopDescription').value;
+            const capacity = parseInt(document.getElementById('coopCapacity').value);
+
+            try {
+                const docRef = await addDoc(collection(db, 'coops'), {
+                    name: name,
+                    description: description,
+                    maxCapacity: capacity,
+                    ownerId: currentUser.uid,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
+                
+                document.getElementById('firestoreStatus').innerHTML = `✅ Coop created with ID: ${docRef.id}`;
+                document.getElementById('firestoreStatus').className = 'status success';
+                
+                // Clear form
+                document.getElementById('coopName').value = '';
+                document.getElementById('coopDescription').value = '';
+                document.getElementById('coopCapacity').value = '10';
+                
+            } catch (error) {
+                document.getElementById('firestoreStatus').innerHTML = `❌ Error creating coop: ${error.message}`;
+                document.getElementById('firestoreStatus').className = 'status error';
+            }
+        }
+
+        window.addChicken = async function() {
+            if (!currentUser) {
+                alert('Please sign in first!');
+                return;
+            }
+
+            const name = document.getElementById('chickenName').value;
+            const breed = document.getElementById('chickenBreed').value;
+            const age = parseInt(document.getElementById('chickenAge').value);
+
+            try {
+                const docRef = await addDoc(collection(db, 'chickens'), {
+                    name: name,
+                    breed: breed,
+                    age: age,
+                    ownerId: currentUser.uid,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
+                
+                document.getElementById('firestoreStatus').innerHTML = `✅ Chicken "${name}" added with ID: ${docRef.id}`;
+                document.getElementById('firestoreStatus').className = 'status success';
+                
+                // Clear form
+                document.getElementById('chickenName').value = '';
+                document.getElementById('chickenBreed').value = '';
+                document.getElementById('chickenAge').value = '6';
+                
+            } catch (error) {
+                document.getElementById('firestoreStatus').innerHTML = `❌ Error adding chicken: ${error.message}`;
+                document.getElementById('firestoreStatus').className = 'status error';
+            }
+        }
+
+        window.loadData = async function() {
+            if (!currentUser) {
+                alert('Please sign in first!');
+                return;
+            }
+
+            try {
+                // Load coops
+                const coopsQuery = query(
+                    collection(db, 'coops'), 
+                    where('ownerId', '==', currentUser.uid),
+                    orderBy('createdAt', 'desc')
+                );
+                const coopsSnapshot = await getDocs(coopsQuery);
+                
+                // Load chickens
+                const chickensQuery = query(
+                    collection(db, 'chickens'), 
+                    where('ownerId', '==', currentUser.uid),
+                    orderBy('createdAt', 'desc')
+                );
+                const chickensSnapshot = await getDocs(chickensQuery);
+                
+                let html = '<h3>📊 Your Data</h3>';
+                
+                html += '<h4>🏠 Your Coops:</h4>';
+                if (coopsSnapshot.empty) {
+                    html += '<p>No coops yet. Create one above!</p>';
+                } else {
+                    coopsSnapshot.forEach((doc) => {
+                        const coop = doc.data();
+                        html += `<div class="status info">
+                            <strong>${coop.name}</strong><br>
+                            ${coop.description}<br>
+                            Capacity: ${coop.maxCapacity}<br>
+                            Created: ${coop.createdAt.toDate().toLocaleDateString()}
+                        </div>`;
+                    });
+                }
+                
+                html += '<h4>🐔 Your Chickens:</h4>';
+                if (chickensSnapshot.empty) {
+                    html += '<p>No chickens yet. Add one above!</p>';
+                } else {
+                    chickensSnapshot.forEach((doc) => {
+                        const chicken = doc.data();
+                        html += `<div class="status success">
+                            <strong>${chicken.name}</strong> (${chicken.breed})<br>
+                            Age: ${chicken.age} months<br>
+                            Added: ${chicken.createdAt.toDate().toLocaleDateString()}
+                        </div>`;
+                    });
+                }
+                
+                document.getElementById('dataDisplay').innerHTML = html;
+                
+            } catch (error) {
+                document.getElementById('firestoreStatus').innerHTML = `❌ Error loading data: ${error.message}`;
+                document.getElementById('firestoreStatus').className = 'status error';
+            }
+        }
+    </script>
+</body>
+</html>

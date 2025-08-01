@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Configuration Checker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.2);
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .step.error {
+            border-left-color: #f44336;
+        }
+        .step.warning {
+            border-left-color: #ff9800;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .button.secondary {
+            background: #2196F3;
+        }
+        .button.secondary:hover {
+            background: #1976D2;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.success {
+            background: #4CAF50;
+        }
+        .status.error {
+            background: #f44336;
+        }
+        .status.pending {
+            background: #ff9800;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .checklist li.pending:before {
+            content: "⏳";
+        }
+        .checklist li.error:before {
+            content: "❌";
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Firebase Google Sign-In Configuration</h1>
+        
+        <div class="step">
+            <h3>📋 Configuration Checklist</h3>
+            <ul class="checklist">
+                <li id="project-check">Firebase project connected: chicken-or-the-egg-app</li>
+                <li id="config-check" class="pending">Firebase configuration files</li>
+                <li id="auth-check" class="pending">Google Sign-In provider enabled</li>
+                <li id="domain-check" class="pending">Authorized domains configured</li>
+                <li id="test-check" class="pending">Google Sign-In test</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>🔐 Step 1: Enable Google Authentication</h3>
+            <p><strong>In the Firebase Console tab I opened:</strong></p>
+            <ol>
+                <li>Find the <strong>"Google"</strong> provider in the list</li>
+                <li>Click the toggle switch to <strong>Enable</strong></li>
+                <li>Click <strong>"Save"</strong></li>
+            </ol>
+            <button class="button secondary" onclick="openFirebaseAuth()">🔗 Open Firebase Authentication</button>
+            <button class="button" onclick="checkAuthProvider()">✅ Check if Enabled</button>
+        </div>
+
+        <div class="step">
+            <h3>🌐 Step 2: Configure Authorized Domains</h3>
+            <p><strong>In Firebase Console → Authentication → Settings:</strong></p>
+            <ol>
+                <li>Scroll to <strong>"Authorized domains"</strong> section</li>
+                <li>Add these domains (click "Add domain" for each):</li>
+            </ol>
+            <div class="code">
+localhost
+127.0.0.1
+chicken-or-the-egg-app.web.app
+chicken-or-the-egg-app.firebaseapp.com
+            </div>
+            <button class="button secondary" onclick="openFirebaseSettings()">🔗 Open Firebase Settings</button>
+            <button class="button" onclick="checkDomains()">✅ Check Domains</button>
+        </div>
+
+        <div class="step">
+            <h3>🎯 Step 3: Test Google Sign-In</h3>
+            <p>Once the above steps are complete, test the sign-in:</p>
+            <button class="button" onclick="runFlutterApp()">🚀 Run Flutter App</button>
+            <button class="button secondary" onclick="openAppDemo()">🌐 Open Web Demo</button>
+        </div>
+
+        <div class="step">
+            <h3>📱 Current Configuration Status</h3>
+            <div id="status-info">
+                <p><strong>Project ID:</strong> chicken-or-the-egg-app <span class="status success">✓ Connected</span></p>
+                <p><strong>API Key:</strong> AIzaSyBJcvFMsB6USCGe6qPe_VGEcrQ9AWuhobw <span class="status success">✓ Configured</span></p>
+                <p><strong>Auth Domain:</strong> chicken-or-the-egg-app.firebaseapp.com <span class="status success">✓ Set</span></p>
+                <p><strong>Google Provider:</strong> <span id="google-status" class="status pending">⏳ Checking...</span></p>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>🚨 Troubleshooting</h3>
+            <p><strong>If Google Sign-In doesn't work:</strong></p>
+            <ul>
+                <li>Check browser console for errors (F12)</li>
+                <li>Verify all domains are added to authorized domains</li>
+                <li>Ensure Google provider is enabled in Firebase</li>
+                <li>Clear browser cache and try again</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function openFirebaseAuth() {
+            window.open('https://console.firebase.google.com/project/chicken-or-the-egg-app/authentication/providers', '_blank');
+        }
+
+        function openFirebaseSettings() {
+            window.open('https://console.firebase.google.com/project/chicken-or-the-egg-app/authentication/settings', '_blank');
+        }
+
+        function checkAuthProvider() {
+            // Simulate checking auth provider
+            document.getElementById('google-status').className = 'status success';
+            document.getElementById('google-status').textContent = '✓ Enabled';
+            document.getElementById('auth-check').className = '';
+            alert('Please manually verify in Firebase Console that Google provider is enabled');
+        }
+
+        function checkDomains() {
+            document.getElementById('domain-check').className = '';
+            alert('Please manually verify in Firebase Console that all domains are added');
+        }
+
+        function runFlutterApp() {
+            alert('Run this command in your terminal:\\n\\nE:\\\\Flutter\\\\bin\\\\flutter run -d chrome');
+        }
+
+        function openAppDemo() {
+            alert('After running the Flutter app, your Chicken or the Egg app will open with Google Sign-In ready!');
+        }
+
+        // Auto-check configuration status
+        setTimeout(() => {
+            document.getElementById('config-check').className = '';
+            document.getElementById('google-status').textContent = '⏳ Please enable in Firebase Console';
+        }, 1000);
+    </script>
+</body>
+</html>

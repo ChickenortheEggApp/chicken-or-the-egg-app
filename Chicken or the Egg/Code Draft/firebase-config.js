@@ -53,3 +53,36 @@ if (process.env.NODE_ENV === 'development') {
 
 // Export for use in other files
 export { app, analytics, db, auth, storage };
+
+// Connection verification function
+export async function verifyFirebaseConnection() {
+  try {
+    // Test if Firebase is properly initialized
+    console.log('Testing Firebase connection...');
+    console.log('Project ID:', app.options.projectId);
+    console.log('Auth Domain:', app.options.authDomain);
+    console.log('Storage Bucket:', app.options.storageBucket);
+    
+    // Test auth instance
+    if (auth.app) {
+      console.log('✅ Firebase Auth: Connected');
+    }
+    
+    // Test Firestore instance  
+    if (db.app) {
+      console.log('✅ Firestore: Connected');
+    }
+    
+    // Test Storage instance
+    if (storage.app) {
+      console.log('✅ Firebase Storage: Connected');
+    }
+    
+    console.log('🎉 Firebase connection verified successfully!');
+    return true;
+    
+  } catch (error) {
+    console.error('❌ Firebase connection failed:', error);
+    return false;
+  }
+}

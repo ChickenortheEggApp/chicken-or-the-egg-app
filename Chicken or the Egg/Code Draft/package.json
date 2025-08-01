@@ -12,7 +12,9 @@
     "validate-env": "node scripts/validate-env.js",
     "deploy:prod": "npm run validate-env && firebase deploy --only firestore:rules,storage:rules",
     "secure-check": "node scripts/security-check.js",
-    "github-update": "node scripts/github-update.js"
+    "github-update": "node scripts/github-update.js",
+    "test-firebase": "node test-firebase-connection.js",
+    "demo": "open firebase-test.html || start firebase-test.html"
   },
   "dependencies": {
     "firebase": "^10.0.0",
