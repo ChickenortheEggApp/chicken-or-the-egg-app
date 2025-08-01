@@ -1586,3 +1586,39 @@ E0731 18:23:25.226564   22952 watch.go:76] watchAllDir unable to walk dir `e:\Ch
 [debug] [2025-07-31T22:24:15.225Z] E0731 18:24:15.225093   22952 load.go:23] Could not load config from "e:\\Chicken App Development\\Chicken or the Egg\\Code Draft\\dataconnect": could not find dataconnect.yaml in `e:\Chicken App Development\Chicken or the Egg\Code Draft\dataconnect`
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"E0731 18:24:15.225093   22952 load.go:23] Could not load config from \"e:\\\\Chicken App Development\\\\Chicken or the Egg\\\\Code Draft\\\\dataconnect\": could not find dataconnect.yaml in `e:\\Chicken App Development\\Chicken or the Egg\\Code Draft\\dataconnect`\n"}}
 [debug] [2025-08-01T00:24:43.297Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-08-01T00:32:28.913Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-08-01T00:32:28.930Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-08-01T00:32:28.932Z] > authorizing via signed-in user (chickenortheeggapp@gmail.com)
+[debug] [2025-08-01T00:32:28.939Z] Checked if tokens are valid: true, expires at: 1754011490526
+[debug] [2025-08-01T00:32:28.940Z] Checked if tokens are valid: true, expires at: 1754011490526
+[debug] [2025-08-01T00:32:28.940Z] [Firebase Plugin] User found:  chickenortheeggapp@gmail.com
+[info] [Firebase Plugin] (Core:Project) New user detected, fetching projects
+[debug] [2025-08-01T00:32:28.943Z] Checked if tokens are valid: true, expires at: 1754011490526
+[debug] [2025-08-01T00:32:28.947Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.10.1) on port 50001
+[debug] [2025-08-01T00:32:40.674Z] I0731 20:32:40.270281   13896 control.go:84] [/emulator/chicken-or-the-egg-app-service 065d] UpdateResources(): done
+Schema: sources: schema\schema.gql [2088B] 
+Connector "default": sources: connector\mutations.gql [1301B] connector\queries.gql [1947B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0731 20:32:40.270281   13896 control.go:84] [/emulator/chicken-or-the-egg-app-service 065d] UpdateResources(): done\nSchema: sources: schema\\schema.gql [2088B] \nConnector \"default\": sources: connector\\mutations.gql [1301B] connector\\queries.gql [1947B] \n"}}
+[debug] [2025-08-01T00:32:42.321Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-08-01T00:32:42.322Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-08-01T00:32:42.322Z] Starting Data Connect Emulator with command {"binary":"C:\\Users\\WildB\\.cache\\firebase\\emulators\\dataconnect-emulator-2.10.1.exe","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=e:\\Chicken App Development\\dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"C:\\\\Users\\\\WildB\\\\.cache\\\\firebase\\\\emulators\\\\dataconnect-emulator-2.10.1.exe\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=e:\\\\Chicken App Development\\\\dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to \u001b[1mdataconnect-debug.log\u001b[22m"}}
+[debug] [2025-08-01T00:32:42.461Z] I0731 20:32:42.390761   14996 load.go:37] Reloading schema and connectors...
+I0731 20:32:42.434241   14996 control.go:84] [/emulator/chicken-or-the-egg-app-service 9721] UpdateResources(): done
+Schema: sources: schema\schema.gql [2088B] 
+Connector "default": sources: connector\mutations.gql [1301B] connector\queries.gql [1947B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0731 20:32:42.390761   14996 load.go:37] Reloading schema and connectors...\nI0731 20:32:42.434241   14996 control.go:84] [/emulator/chicken-or-the-egg-app-service 9721] UpdateResources(): done\nSchema: sources: schema\\schema.gql [2088B] \nConnector \"default\": sources: connector\\mutations.gql [1301B] connector\\queries.gql [1947B] \n"}}
+[debug] [2025-08-01T00:32:42.637Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-08-01T00:32:42.637Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-08-01T00:32:42.894Z] I0731 20:32:42.667034   14996 codegen.go:82] [connector "default" kotlinSdk] Generating sources into "e:\\Chicken App Development\\dataconnect-generated\\kotlin\\connectors\\default"
+I0731 20:32:42.851990   14996 collector.go:107] schema extensions wrote into "e:\\Chicken App Development\\dataconnect\\.dataconnect\\schema"
+Generated sources: prelude.gql [73172B] 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0731 20:32:42.667034   14996 codegen.go:82] [connector \"default\" kotlinSdk] Generating sources into \"e:\\\\Chicken App Development\\\\dataconnect-generated\\\\kotlin\\\\connectors\\\\default\"\nI0731 20:32:42.851990   14996 collector.go:107] schema extensions wrote into \"e:\\\\Chicken App Development\\\\dataconnect\\\\.dataconnect\\\\schema\"\nGenerated sources: prelude.gql [73172B] \n"}}
+[debug] [2025-08-01T00:32:42.969Z] I0731 20:32:42.912449   14996 collector.go:107] connector "default" kotlinSdk wrote into "e:\\Chicken App Development\\dataconnect-generated\\kotlin\\connectors\\default"
+Generated sources: DefaultConnector.kt [8322B] DefaultConnectorKeys.kt [799B] DefaultConnectorEnums.kt [797B] README.md [6657B] 
+I0731 20:32:42.912449   14996 load.go:115] Finished reloading
+I0731 20:32:42.947655   14996 dev.go:95] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0731 20:32:42.912449   14996 collector.go:107] connector \"default\" kotlinSdk wrote into \"e:\\\\Chicken App Development\\\\dataconnect-generated\\\\kotlin\\\\connectors\\\\default\"\nGenerated sources: DefaultConnector.kt [8322B] DefaultConnectorKeys.kt [799B] DefaultConnectorEnums.kt [797B] README.md [6657B] \nI0731 20:32:42.912449   14996 load.go:115] Finished reloading\nI0731 20:32:42.947655   14996 dev.go:95] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[debug] [2025-08-01T00:32:46.658Z] I0731 20:32:46.657096   14996 engine.go:174] [/emulator/chicken-or-the-egg-app-service 9721] ExecuteGraphqlRead IntrospectionQuery: succeeded. 
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I0731 20:32:46.657096   14996 engine.go:174] [/emulator/chicken-or-the-egg-app-service 9721] ExecuteGraphqlRead IntrospectionQuery: succeeded. \n"}}
